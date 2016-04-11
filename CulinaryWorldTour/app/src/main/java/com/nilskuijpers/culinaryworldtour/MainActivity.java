@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements TaskDelegate {
         });
 
         data = SharedObjects.getInstance();
-        data.initWithContext(MainActivity.this);
+        data.initWithContext(getApplicationContext());
 
         gMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
 
@@ -99,12 +99,12 @@ public class MainActivity extends AppCompatActivity implements TaskDelegate {
                     fabRotate.setRepeatMode(Animation.INFINITE);
                     fab.startAnimation(fabRotate);
                     rv.removeAllViews();
-                    data.randomCountry();
+                    data.randomCountry(MainActivity.this);
                 }
 
                 catch(Exception ex)
                 {
-                    Log.e("Error", ex.getMessage().toString());
+                    Log.e("Error", ex.getMessage());
                 }
             }
         });
@@ -135,9 +135,6 @@ public class MainActivity extends AppCompatActivity implements TaskDelegate {
     @Override
     public void TaskCompletionResult(Country c) {
         Log.i("Info", "Delegate received for " + c.getName());
-
-        if(c != null)
-        {
             if(data.getPreviousCountry() != null)
             {
                 Snackbar.make(findViewById(R.id.root_layout), c.getName() + " has been loaded", Snackbar.LENGTH_LONG).setAction("Action", null).show();
@@ -182,15 +179,6 @@ public class MainActivity extends AppCompatActivity implements TaskDelegate {
             CountryHeaderView chv = new CountryHeaderView(getApplicationContext(),c);
 
             LayoutInflater.from(this).inflate(R.layout.countryheaderview,(ViewGroup)findViewById(R.id.container),true);
-
-            /*ImageView iv = (ImageView) findViewById(R.id.person_photo);
-            TextView tv = (TextView) findViewById(R.id.person_name);
-            TextView tv2 = (TextView) findViewById(R.id.person_age);
-            iv.setImageBitmap(c.getCountryFlag());
-            tv.setText(c.getName());
-            tv2.setText(c.getCapital());*/
-
-        }
     }
 }
 

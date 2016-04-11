@@ -32,9 +32,9 @@ public class SharedObjects {
         return ourInstance;
     }
 
-    public void randomCountry() throws ExecutionException, InterruptedException {
+    public void randomCountry(TaskDelegate activityContext) throws ExecutionException, InterruptedException {
         alpha3Array = context.getResources().getStringArray(R.array.iso3166);
-        this.setChosenCountry(alpha3Array[new Random().nextInt(alpha3Array.length)]);
+        this.setChosenCountry(alpha3Array[new Random().nextInt(alpha3Array.length)],activityContext);
     }
 
     public List<Country> getAllCountries()
@@ -64,24 +64,24 @@ public class SharedObjects {
         this.chosenCountry = c;
     }
 
-    public void setChosenCountry(String alpha3code) throws ExecutionException, InterruptedException {
+    public void setChosenCountry(String alpha3code, TaskDelegate activityContext) throws ExecutionException, InterruptedException {
 
         for (Country c : allCountries)
+        {
+            if(c.getAlpha3Code().toLowerCase().equals(alpha3code.toLowerCase()))
             {
-                if(c.getAlpha3Code().toLowerCase().equals(alpha3code.toLowerCase()))
-                {
-                    TaskDelegate td = (MainActivity) context;
-                    this.previousCountry = this.chosenCountry;
-                    this.chosenCountry = c;
-                    td.TaskCompletionResult(c);
-                    Log.d("Debug",this.chosenCountry.getName() + " found in local database");
-                    break;
-                }
+                TaskDelegate td = activityContext;
+                this.previousCountry = this.chosenCountry;
+                this.chosenCountry = c;
+                td.TaskCompletionResult(c);
+                Log.d("Debug",this.chosenCountry.getName() + " found in local database");
+                break;
             }
+        }
 
         if(this.chosenCountry == null || !this.chosenCountry.getAlpha3Code().toLowerCase().equals(alpha3code.toLowerCase()))
         {
-            countryParser = new CountryParser(this.context);
+            countryParser = new CountryParser((MainActivity) activityContext);
             this.previousCountry = this.chosenCountry;
             this.countryParser.execute(alpha3code);
         }
