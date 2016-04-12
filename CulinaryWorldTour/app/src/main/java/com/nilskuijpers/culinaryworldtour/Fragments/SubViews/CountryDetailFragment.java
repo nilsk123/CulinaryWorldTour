@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nilskuijpers.culinaryworldtour.Objects.Country;
@@ -30,6 +31,7 @@ public class CountryDetailFragment extends Fragment {
     private TextView countryName;
     private TextView countryCapital;
     private TextView countryPopulation;
+    private ImageView countryImageFlag;
 
     private OnFragmentInteractionListener mListener;
 
@@ -62,10 +64,12 @@ public class CountryDetailFragment extends Fragment {
         countryName = (TextView) view.findViewById(R.id.countryNamePlaceholder);
         countryCapital = (TextView) view.findViewById(R.id.countryCapitalPlaceholder);
         countryPopulation = (TextView) view.findViewById(R.id.countryPopPlaceholder);
+        countryImageFlag = (ImageView) view.findViewById(R.id.detailViewCountryFlag);
 
         countryName.setText(country.getName());
         countryCapital.setText(country.getCapital());
         countryPopulation.setText(String.valueOf(country.getPopulation()));
+        countryImageFlag.setImageBitmap(country.getCountryFlag());
 
         return view;
     }

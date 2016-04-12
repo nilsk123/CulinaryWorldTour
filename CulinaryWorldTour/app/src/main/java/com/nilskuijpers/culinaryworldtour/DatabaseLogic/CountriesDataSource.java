@@ -98,11 +98,9 @@ public class CountriesDataSource {
 
         cursor.moveToFirst();
 
-        Log.i("Info", String.valueOf(cursor.getCount()) + DatabaseHelper.COUNTRY_COLUMN_ALPHA3 + " = '" + alpha3code + "'");
 
         if(cursor.getCount() > 0)
         {
-            Log.i("Info", "found");
             c = cursorToCountry(cursor);
 
             Cursor dishescursor = database.query(DatabaseHelper.TABLE_DISH,

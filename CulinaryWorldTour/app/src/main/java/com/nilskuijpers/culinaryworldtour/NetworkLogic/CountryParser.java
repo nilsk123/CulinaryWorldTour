@@ -76,8 +76,6 @@ public class CountryParser extends AsyncTask<String, Void, Country>
 
                         JSONArray latitudeLongitudeJSONArray = countryJSONObject.getJSONArray("latlng");
 
-                        Log.i("alpha3", countryJSONObject.getString("alpha3Code"));
-
                         Country tempCountry = new Country(countryJSONObject.getString("alpha2Code"), countryJSONObject.getString("alpha3Code"), countryJSONObject.getString("name"), countryJSONObject.getString("capital"), countryJSONObject.getInt("population"), new LatLng(latitudeLongitudeJSONArray.getDouble(0), latitudeLongitudeJSONArray.getDouble(1)));
 
                         Log.d("Line", line);
