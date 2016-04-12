@@ -1,6 +1,6 @@
-package com.nilskuijpers.culinaryworldtour.Fragments;
+package com.nilskuijpers.culinaryworldtour.Fragments.MainViews;
 
-import android.app.ActionBar;
+
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -12,7 +12,6 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -28,7 +27,6 @@ import android.widget.LinearLayout;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.nilskuijpers.culinaryworldtour.Interfaces.TaskDelegate;
@@ -93,6 +91,8 @@ public class CountrySelectorFragment extends Fragment implements OnMapReadyCallb
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
 
         fabRotate = AnimationUtils.loadAnimation(getContext(), R.anim.rotate);
 
