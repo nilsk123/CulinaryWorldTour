@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -15,14 +14,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.nilskuijpers.culinaryworldtour.Fragments.CountrySelectorFragment;
+import com.nilskuijpers.culinaryworldtour.Fragments.MainViews.CountrySelectorFragment;
 
 public class MainActivity extends AppCompatActivity implements CountrySelectorFragment.OnFragmentInteractionListener {
 
     private DrawerLayout mDrawer;
     private ActionBarDrawerToggle mDrawerToggle;
     private Fragment fragment;
-    private FragmentManager fm;
     private FragmentTransaction ft;
 
     @Override
@@ -58,11 +56,8 @@ public class MainActivity extends AppCompatActivity implements CountrySelectorFr
         fragment = CountrySelectorFragment.newInstance();
 
         ft = getSupportFragmentManager().beginTransaction();
-
         ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right);
-
         ft.replace(R.id.flContent,fragment);
-
         ft.commit();
 
     }
@@ -81,43 +76,37 @@ public class MainActivity extends AppCompatActivity implements CountrySelectorFr
     public void selectDrawerItem(MenuItem menuItem) {
         // Create a new fragment and specify the fragment to show based on nav item clicked
 
-        Class fragmentClass;
-        switch(menuItem.getItemId()) {
-            case R.id.country_selector_fragment:
-                fragmentClass = CountrySelectorFragment.class;
-                break;
-            default:
-                fragmentClass = CountrySelectorFragment.class;
-        }
+       if(!menuItem.isChecked()) {
+           Class fragmentClass;
+           switch (menuItem.getItemId()) {
+               case R.id.country_selector_fragment:
+                   fragmentClass = CountrySelectorFragment.class;
+                   break;
+               default:
+                   fragmentClass = CountrySelectorFragment.class;
+           }
 
-        try {
-            fragment = (Fragment) fragmentClass.newInstance();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+           try {
+               fragment = (Fragment) fragmentClass.newInstance();
+           } catch (Exception e) {
+               e.printStackTrace();
+           }
 
-        // Insert the fragment by replacing any existing fragment
+           // Insert the fragment by replacing any existing fragment
 
-        ft = getSupportFragmentManager().beginTransaction();
+           ft = getSupportFragmentManager().beginTransaction();
+           ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right);
+           ft.replace(R.id.flContent, fragment);
+           ft.commit();
 
-        ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right);
+           // Highlight the selected item has been done by NavigationView
 
-        ft.replace(R.id.flContent,fragment);
+           menuItem.setChecked(true);
 
-        ft.commit();
-
-        // Highlight the selected item has been done by NavigationView
-
-        menuItem.setChecked(true);
-
-        // Close the navigation drawer
-
+           // Close the navigation drawer
+       }
         mDrawer.closeDrawers();
     }
-
-
-
-
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -159,8 +148,6 @@ public class MainActivity extends AppCompatActivity implements CountrySelectorFr
     @Override
     public void onFragmentInteraction(Uri uri) {
     }
-
-
 }
 
 

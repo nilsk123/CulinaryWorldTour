@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.Log;
 
 import com.nilskuijpers.culinaryworldtour.DatabaseLogic.CountriesDataSource;
-import com.nilskuijpers.culinaryworldtour.Fragments.CountrySelectorFragment;
 import com.nilskuijpers.culinaryworldtour.Interfaces.TaskDelegate;
 import com.nilskuijpers.culinaryworldtour.NetworkLogic.CountryParser;
 import com.nilskuijpers.culinaryworldtour.Objects.Country;
@@ -80,18 +79,8 @@ public class SharedObjects {
         }
     }
 
-    public Country getChosenCountry()
-    {
-        return this.chosenCountry;
-    }
-
     public Country getPreviousCountry()
     {
         return this.previousCountry;
-    }
-
-    public CountryParser getCountryParser()
-    {
-        return this.countryParser;
     }
 }
