@@ -5,9 +5,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-/**
- * Created by surfa on 30-3-2016.
- */
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     public static final String TABLE_COUNTRY = "country";
@@ -30,7 +27,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String DISH_COLUMN_BITMAPLOCATION = "dish_bitmaplocation";
 
     private static final String DATABASE_NAME = "CulinaryWorldTour.db";
-    private static final int DATABASE_VERSION = 8;
+    private static final int DATABASE_VERSION = 9;
 
     private static final String COUNTRY_CREATE = "create table "
             + TABLE_COUNTRY + "(" + COUNTRY_COLUMN_ALPHA3 + " text primary key, "

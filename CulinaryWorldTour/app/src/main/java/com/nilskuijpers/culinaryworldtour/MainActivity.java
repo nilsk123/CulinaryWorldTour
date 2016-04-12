@@ -1,38 +1,29 @@
 package com.nilskuijpers.culinaryworldtour;
 
 import android.content.res.Configuration;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.TransitionDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
+import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.DecelerateInterpolator;
 
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
 import com.nilskuijpers.culinaryworldtour.Fragments.CountrySelectorFragment;
-import com.nilskuijpers.culinaryworldtour.Interfaces.TaskDelegate;
-import com.nilskuijpers.culinaryworldtour.Objects.Country;
 
 public class MainActivity extends AppCompatActivity implements CountrySelectorFragment.OnFragmentInteractionListener {
 
-    private SharedObjects data;
     private DrawerLayout mDrawer;
     private ActionBarDrawerToggle mDrawerToggle;
+    private Fragment fragment;
+    private FragmentManager fm;
+    private FragmentTransaction ft;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,44 +32,97 @@ public class MainActivity extends AppCompatActivity implements CountrySelectorFr
 
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-        mDrawerToggle = new ActionBarDrawerToggle(MainActivity.this, mDrawer, R.string.drawer_open, R.string.drawer_close){
-
+        mDrawerToggle = new ActionBarDrawerToggle(MainActivity.this, mDrawer, R.string.drawer_open, R.string.drawer_close)
+            {
             /** Called when a drawer has settled in a completely closed state. */
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
-                //getActionBar().setTitle(mTitle);
-                //invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
 
             /** Called when a drawer has settled in a completely open state. */
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                //getActionBar().setTitle(mDrawerTitle);
-                //invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
         };
 
 
         mDrawer.addDrawerListener(mDrawerToggle);
 
+        setupDrawerContent((NavigationView) findViewById(R.id.nvView));
 
+        setHomeFragment();
+    }
 
-        //data = SharedObjects.getInstance();
-        //data.initWithContext(getApplicationContext());
+    private void setHomeFragment()
+    {
+        fragment = CountrySelectorFragment.newInstance();
 
-        //gMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
+        ft = getSupportFragmentManager().beginTransaction();
 
-        CountrySelectorFragment fragmentClass = CountrySelectorFragment.newInstance();
+        ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right);
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.flContent, fragmentClass).commit();
+        ft.replace(R.id.flContent,fragment);
 
+        ft.commit();
 
     }
+
+    private void setupDrawerContent(NavigationView navigationView) {
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        selectDrawerItem(menuItem);
+                        return true;
+                    }
+                });
+    }
+
+    public void selectDrawerItem(MenuItem menuItem) {
+        // Create a new fragment and specify the fragment to show based on nav item clicked
+
+        Class fragmentClass;
+        switch(menuItem.getItemId()) {
+            case R.id.country_selector_fragment:
+                fragmentClass = CountrySelectorFragment.class;
+                break;
+            default:
+                fragmentClass = CountrySelectorFragment.class;
+        }
+
+        try {
+            fragment = (Fragment) fragmentClass.newInstance();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // Insert the fragment by replacing any existing fragment
+
+        ft = getSupportFragmentManager().beginTransaction();
+
+        ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right);
+
+        ft.replace(R.id.flContent,fragment);
+
+        ft.commit();
+
+        // Highlight the selected item has been done by NavigationView
+
+        menuItem.setChecked(true);
+
+        // Close the navigation drawer
+
+        mDrawer.closeDrawers();
+    }
+
+
+
+
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
+
         // Sync the toggle state after onRestoreInstanceState has occurred.
         mDrawerToggle.syncState();
     }
@@ -110,12 +154,13 @@ public class MainActivity extends AppCompatActivity implements CountrySelectorFr
         }
 
         return super.onOptionsItemSelected(item);
-
     }
 
     @Override
     public void onFragmentInteraction(Uri uri) {
     }
+
+
 }
 
 

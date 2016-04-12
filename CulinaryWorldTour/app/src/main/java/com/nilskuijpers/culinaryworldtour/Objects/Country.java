@@ -35,7 +35,6 @@ public class Country {
 
     public void addDish(Dish d)
     {
-        Log.i("Info", "Adding " + d.getName() + " to " + d.getCountryAlpha3());
         SubmittedDishes.add(d);
     }
 

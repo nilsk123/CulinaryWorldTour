@@ -23,7 +23,7 @@ public class CountriesDataSource {
     private Context context;
 
 
-    private String [] allCountryColumns = {DatabaseHelper.COUNTRY_COLUMN_ALPHA3, DatabaseHelper.COUNTRY_COLUMN_ALPHA2, DatabaseHelper.COUNTRY_COLUMN_NAME, DatabaseHelper.COUNTRY_COLUMN_CAPITAL, DatabaseHelper.COUNTRY_COLUMN_POPULATION, DatabaseHelper.COUNTRY_COLUMN_LAT, COUNTRY_COLUMN_LONG, DatabaseHelper.COUNTRY_COLUMN_BITMAPLOCATION};
+    private String [] allCountryColumns = {DatabaseHelper.COUNTRY_COLUMN_ALPHA2, DatabaseHelper.COUNTRY_COLUMN_ALPHA3, DatabaseHelper.COUNTRY_COLUMN_NAME, DatabaseHelper.COUNTRY_COLUMN_CAPITAL, DatabaseHelper.COUNTRY_COLUMN_POPULATION, DatabaseHelper.COUNTRY_COLUMN_LAT, COUNTRY_COLUMN_LONG, DatabaseHelper.COUNTRY_COLUMN_BITMAPLOCATION};
     private String [] allDishColumns = {DatabaseHelper.DISH_COLUMN_ALPHA3, DatabaseHelper.DISH_COLUMN_DATE, DatabaseHelper.DISH_COLUMN_NAME, DatabaseHelper.DISH_COLUMN_DESCRIPTION, DatabaseHelper.DISH_COLUMN_RATING, DatabaseHelper.DISH_COLUMN_BITMAPLOCATION};
 
     public CountriesDataSource(Context cntxt)
@@ -45,13 +45,13 @@ public class CountriesDataSource {
     public void storeCountry(Country c)
     {
         ContentValues values = new ContentValues();
-        values.put(DatabaseHelper.COUNTRY_COLUMN_ALPHA3, c.getAlpha3Code());
         values.put(DatabaseHelper.COUNTRY_COLUMN_ALPHA2, c.getAlpha2Code());
+        values.put(DatabaseHelper.COUNTRY_COLUMN_ALPHA3, c.getAlpha3Code());
         values.put(DatabaseHelper.COUNTRY_COLUMN_NAME, c.getName());
         values.put(DatabaseHelper.COUNTRY_COLUMN_CAPITAL, c.getCapital());
         values.put(DatabaseHelper.COUNTRY_COLUMN_POPULATION, c.getPopulation());
         values.put(DatabaseHelper.COUNTRY_COLUMN_LAT, c.getLocation().latitude);
-        values.put(COUNTRY_COLUMN_LONG, c.getLocation().longitude);
+        values.put(DatabaseHelper.COUNTRY_COLUMN_LONG, c.getLocation().longitude);
         values.put(DatabaseHelper.COUNTRY_COLUMN_BITMAPLOCATION, c.getAlpha3Code().toLowerCase() + ".png");
 
         long insertId = database.insert(DatabaseHelper.TABLE_COUNTRY,null,values);
@@ -88,6 +88,39 @@ public class CountriesDataSource {
         {
             Log.e("Error", "error adding country to database");
         }
+    }
+
+    public Country getCountry(String alpha3code)
+    {
+        Country c = null;
+
+        Cursor cursor = database.query(DatabaseHelper.TABLE_COUNTRY, allCountryColumns, DatabaseHelper.COUNTRY_COLUMN_ALPHA3 + " = '" + alpha3code + "'", null, null, null, null);
+
+        cursor.moveToFirst();
+
+        Log.i("Info", String.valueOf(cursor.getCount()) + DatabaseHelper.COUNTRY_COLUMN_ALPHA3 + " = '" + alpha3code + "'");
+
+        if(cursor.getCount() > 0)
+        {
+            Log.i("Info", "found");
+            c = cursorToCountry(cursor);
+
+            Cursor dishescursor = database.query(DatabaseHelper.TABLE_DISH,
+                    allDishColumns, DatabaseHelper.DISH_COLUMN_ALPHA3 + " = '" + c.getAlpha3Code() + "'", null, null, null, null);
+
+            Log.i("Info", "Found " + dishescursor.getCount() + " dishes for " + c.getName());
+
+            dishescursor.moveToFirst();
+
+            while(!dishescursor.isAfterLast())
+            {
+                c.addDish(cursorToDish(dishescursor, c));
+
+                dishescursor.moveToNext();
+            }
+        }
+
+        return c;
     }
 
     public List<Country> getAllCountries() {

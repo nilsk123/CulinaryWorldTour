@@ -22,7 +22,6 @@ public class SharedObjects {
     private CountryParser countryParser;
     private Country previousCountry;
     private Country chosenCountry;
-    private List<Country> allCountries;
     private Context context;
     private String[] alpha3Array;
 
@@ -38,7 +37,7 @@ public class SharedObjects {
 
     public List<Country> getAllCountries()
     {
-        return this.allCountries;
+        return countriesDataSource.getAllCountries();
     }
 
     private SharedObjects() {
@@ -49,7 +48,6 @@ public class SharedObjects {
         this.context = cntxt;
         countriesDataSource = new CountriesDataSource(cntxt);
         countriesDataSource.open();
-        this.refreshCountryList();
     }
 
     public void mockDish()
@@ -59,25 +57,22 @@ public class SharedObjects {
 
     public void setChosenCountry(Country c)
     {
-        this.allCountries.add(c);
         this.chosenCountry = c;
     }
 
     public void setChosenCountry(String alpha3code, TaskDelegate activityContext) throws ExecutionException, InterruptedException {
 
-        for (Country c : allCountries)
+        Country c = countriesDataSource.getCountry(alpha3code);
+
+        if(c != null)
         {
-            if(c.getAlpha3Code().toLowerCase().equals(alpha3code.toLowerCase()))
-            {
-                this.previousCountry = this.chosenCountry;
-                this.chosenCountry = c;
-                activityContext.TaskCompletionResult(c);
-                Log.d("Debug",this.chosenCountry.getName() + " found in local database");
-                break;
-            }
+            this.previousCountry = this.chosenCountry;
+            this.chosenCountry = c;
+            activityContext.TaskCompletionResult(c);
+            Log.d("Debug",this.chosenCountry.getName() + " found in local database");
         }
 
-        if(this.chosenCountry == null || !this.chosenCountry.getAlpha3Code().toLowerCase().equals(alpha3code.toLowerCase()))
+        else
         {
             countryParser = new CountryParser(this.context, activityContext);
             this.previousCountry = this.chosenCountry;
@@ -98,10 +93,5 @@ public class SharedObjects {
     public CountryParser getCountryParser()
     {
         return this.countryParser;
-    }
-
-    public void refreshCountryList()
-    {
-        allCountries = countriesDataSource.getAllCountries();
     }
 }
