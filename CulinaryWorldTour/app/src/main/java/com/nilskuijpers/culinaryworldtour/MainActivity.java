@@ -15,8 +15,9 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.nilskuijpers.culinaryworldtour.Fragments.MainViews.CountrySelectorFragment;
+import com.nilskuijpers.culinaryworldtour.Fragments.SubViews.CountryDetailFragment;
 
-public class MainActivity extends AppCompatActivity implements CountrySelectorFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements CountrySelectorFragment.OnFragmentInteractionListener, CountryDetailFragment.OnFragmentInteractionListener {
 
     private DrawerLayout mDrawer;
     private ActionBarDrawerToggle mDrawerToggle;

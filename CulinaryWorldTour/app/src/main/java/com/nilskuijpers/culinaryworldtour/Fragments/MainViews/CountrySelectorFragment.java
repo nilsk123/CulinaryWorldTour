@@ -12,6 +12,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -22,6 +23,7 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -29,6 +31,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.nilskuijpers.culinaryworldtour.Fragments.SubViews.CountryDetailFragment;
 import com.nilskuijpers.culinaryworldtour.Interfaces.TaskDelegate;
 import com.nilskuijpers.culinaryworldtour.Misc.AppBarStateChangeListener;
 import com.nilskuijpers.culinaryworldtour.Objects.Country;
@@ -43,14 +46,14 @@ import com.nilskuijpers.culinaryworldtour.SharedObjects;
  * Use the {@link CountrySelectorFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CountrySelectorFragment extends Fragment implements OnMapReadyCallback, TaskDelegate {
+public class CountrySelectorFragment extends Fragment implements OnMapReadyCallback, TaskDelegate, CountryDetailFragment.OnFragmentInteractionListener {
 
 
     private OnFragmentInteractionListener mListener;
     private Toolbar toolbar;
     private AppBarLayout appBarLayout;
     private Animation fabRotate;
-    private LinearLayout rv;
+    private FrameLayout detailcontainer;
     private FloatingActionButton fab;
     private FloatingActionButton collapsedFab;
     private SupportMapFragment gMapFragment;
@@ -58,6 +61,8 @@ public class CountrySelectorFragment extends Fragment implements OnMapReadyCallb
     private GoogleMap gMap;
     private ImageView countryFlagImageView;
     private CoordinatorLayout root;
+    private Fragment fragment;
+    private FragmentTransaction ft;
 
     public CountrySelectorFragment() {
         // Required empty public constructor
@@ -96,7 +101,7 @@ public class CountrySelectorFragment extends Fragment implements OnMapReadyCallb
 
         fabRotate = AnimationUtils.loadAnimation(getContext(), R.anim.rotate);
 
-        rv = (LinearLayout) view.findViewById(R.id.container);
+        detailcontainer = (FrameLayout) view.findViewById(R.id.container);
 
         appBarLayout = (AppBarLayout) view.findViewById(R.id.appbar);
         collapsedFab = (FloatingActionButton) view.findViewById(R.id.collapsedFab);
@@ -134,7 +139,7 @@ public class CountrySelectorFragment extends Fragment implements OnMapReadyCallb
                 {
                     fabRotate.setRepeatMode(Animation.INFINITE);
                     fab.startAnimation(fabRotate);
-                    rv.removeAllViews();
+                    //detailcontainer.removeAllViews();
                     data.randomCountry(CountrySelectorFragment.this);
                 }
 
@@ -216,7 +221,17 @@ public class CountrySelectorFragment extends Fragment implements OnMapReadyCallb
         this.gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(c.getLocation(), 5));
         fab.clearAnimation();
 
-        LayoutInflater.from(getActivity().getApplicationContext()).inflate(R.layout.countryheaderview, rv,true);
+        fragment = CountryDetailFragment.newInstance();
+
+        ft = getChildFragmentManager().beginTransaction();
+        ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right);
+        ft.replace(R.id.container,fragment);
+        ft.commit();
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
     }
 
     /**

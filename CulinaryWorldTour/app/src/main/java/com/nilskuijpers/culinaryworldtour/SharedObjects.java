@@ -9,7 +9,6 @@ import com.nilskuijpers.culinaryworldtour.NetworkLogic.CountryParser;
 import com.nilskuijpers.culinaryworldtour.Objects.Country;
 import com.nilskuijpers.culinaryworldtour.Objects.Dish;
 
-import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
@@ -32,11 +31,6 @@ public class SharedObjects {
     public void randomCountry(TaskDelegate activityContext) throws ExecutionException, InterruptedException {
         alpha3Array = context.getResources().getStringArray(R.array.iso3166);
         this.setChosenCountry(alpha3Array[new Random().nextInt(alpha3Array.length)],activityContext);
-    }
-
-    public List<Country> getAllCountries()
-    {
-        return countriesDataSource.getAllCountries();
     }
 
     private SharedObjects() {
