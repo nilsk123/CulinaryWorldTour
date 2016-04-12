@@ -8,7 +8,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.nilskuijpers.culinaryworldtour.Country;
+import com.nilskuijpers.culinaryworldtour.Objects.Country;
 import com.nilskuijpers.culinaryworldtour.DatabaseLogic.CountriesDataSource;
 import com.nilskuijpers.culinaryworldtour.FilesystemLogic.ImageSaver;
 import com.nilskuijpers.culinaryworldtour.MainActivity;
@@ -23,9 +23,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-/**
- * Created by surfa on 29-3-2016.
- */
 public class CountryParser extends AsyncTask<String, Void, Country>
 {
     private CountriesDataSource cds;
@@ -43,9 +40,9 @@ public class CountryParser extends AsyncTask<String, Void, Country>
 
     private SharedObjects sharedObjects;
 
-    public CountryParser(Context cntxt){
+    public CountryParser(Context cntxt, TaskDelegate td){
         this.context = cntxt;
-        this.delegate = (MainActivity) cntxt;
+        this.delegate = td;
     }
 
     @Override

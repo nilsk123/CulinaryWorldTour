@@ -1,4 +1,4 @@
-package com.nilskuijpers.culinaryworldtour;
+package com.nilskuijpers.culinaryworldtour.Objects;
 
 import android.graphics.Bitmap;
 import android.media.Rating;
@@ -6,9 +6,6 @@ import android.media.Rating;
 import java.util.Calendar;
 import java.util.Date;
 
-/**
- * Created by surfa on 30-3-2016.
- */
 public class Dish {
 
     private Country country;
@@ -19,7 +16,7 @@ public class Dish {
     private Bitmap photo;
 
 
-    public Dish(){};
+    public Dish(){}
 
     public Dish(Date oldDate, String Name, String Description, Bitmap Photo, Country assCountry)
     {

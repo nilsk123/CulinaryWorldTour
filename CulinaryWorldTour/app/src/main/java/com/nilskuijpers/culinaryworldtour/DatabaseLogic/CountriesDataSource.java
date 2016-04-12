@@ -6,17 +6,16 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.nilskuijpers.culinaryworldtour.Country;
-import com.nilskuijpers.culinaryworldtour.Dish;
+import com.nilskuijpers.culinaryworldtour.Objects.Country;
+import com.nilskuijpers.culinaryworldtour.Objects.Dish;
 import com.nilskuijpers.culinaryworldtour.FilesystemLogic.ImageSaver;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Created by surfa on 30-3-2016.
- */
+import static com.nilskuijpers.culinaryworldtour.DatabaseLogic.DatabaseHelper.COUNTRY_COLUMN_LONG;
+
 public class CountriesDataSource {
 
     private SQLiteDatabase database;
@@ -24,8 +23,8 @@ public class CountriesDataSource {
     private Context context;
 
 
-    private String [] allCountryColumns = { dbHelper.COUNTRY_COLUMN_ALPHA3, dbHelper.COUNTRY_COLUMN_ALPHA2, dbHelper.COUNTRY_COLUMN_NAME, dbHelper.COUNTRY_COLUMN_CAPITAL, dbHelper.COUNTRY_COLUMN_POPULATION, dbHelper.COUNTRY_COLUMN_LAT, dbHelper.COUNTRY_COLUMN_LONG, dbHelper.COUNTRY_COLUMN_BITMAPLOCATION};
-    private String [] allDishColumns = { dbHelper.DISH_COLUMN_ALPHA3, dbHelper.DISH_COLUMN_DATE, dbHelper.DISH_COLUMN_NAME, dbHelper.DISH_COLUMN_DESCRIPTION, dbHelper.DISH_COLUMN_RATING, dbHelper.DISH_COLUMN_BITMAPLOCATION};
+    private String [] allCountryColumns = {DatabaseHelper.COUNTRY_COLUMN_ALPHA3, DatabaseHelper.COUNTRY_COLUMN_ALPHA2, DatabaseHelper.COUNTRY_COLUMN_NAME, DatabaseHelper.COUNTRY_COLUMN_CAPITAL, DatabaseHelper.COUNTRY_COLUMN_POPULATION, DatabaseHelper.COUNTRY_COLUMN_LAT, COUNTRY_COLUMN_LONG, DatabaseHelper.COUNTRY_COLUMN_BITMAPLOCATION};
+    private String [] allDishColumns = {DatabaseHelper.DISH_COLUMN_ALPHA3, DatabaseHelper.DISH_COLUMN_DATE, DatabaseHelper.DISH_COLUMN_NAME, DatabaseHelper.DISH_COLUMN_DESCRIPTION, DatabaseHelper.DISH_COLUMN_RATING, DatabaseHelper.DISH_COLUMN_BITMAPLOCATION};
 
     public CountriesDataSource(Context cntxt)
     {
@@ -46,16 +45,16 @@ public class CountriesDataSource {
     public void storeCountry(Country c)
     {
         ContentValues values = new ContentValues();
-        values.put(dbHelper.COUNTRY_COLUMN_ALPHA3, c.getAlpha3Code());
-        values.put(dbHelper.COUNTRY_COLUMN_ALPHA2, c.getAlpha2Code());
-        values.put(dbHelper.COUNTRY_COLUMN_NAME, c.getName());
-        values.put(dbHelper.COUNTRY_COLUMN_CAPITAL, c.getCapital());
-        values.put(dbHelper.COUNTRY_COLUMN_POPULATION, c.getPopulation());
-        values.put(dbHelper.COUNTRY_COLUMN_LAT, c.getLocation().latitude);
-        values.put(dbHelper.COUNTRY_COLUMN_LONG, c.getLocation().longitude);
-        values.put(dbHelper.COUNTRY_COLUMN_BITMAPLOCATION, c.getAlpha3Code().toLowerCase() + ".png");
+        values.put(DatabaseHelper.COUNTRY_COLUMN_ALPHA3, c.getAlpha3Code());
+        values.put(DatabaseHelper.COUNTRY_COLUMN_ALPHA2, c.getAlpha2Code());
+        values.put(DatabaseHelper.COUNTRY_COLUMN_NAME, c.getName());
+        values.put(DatabaseHelper.COUNTRY_COLUMN_CAPITAL, c.getCapital());
+        values.put(DatabaseHelper.COUNTRY_COLUMN_POPULATION, c.getPopulation());
+        values.put(DatabaseHelper.COUNTRY_COLUMN_LAT, c.getLocation().latitude);
+        values.put(COUNTRY_COLUMN_LONG, c.getLocation().longitude);
+        values.put(DatabaseHelper.COUNTRY_COLUMN_BITMAPLOCATION, c.getAlpha3Code().toLowerCase() + ".png");
 
-        long insertId = database.insert(dbHelper.TABLE_COUNTRY,null,values);
+        long insertId = database.insert(DatabaseHelper.TABLE_COUNTRY,null,values);
 
         if(!String.valueOf("-1").equals(String.valueOf(insertId)))
         {
@@ -71,14 +70,14 @@ public class CountriesDataSource {
     public void storeDish(Dish d)
     {
         ContentValues values = new ContentValues();
-        values.put(dbHelper.DISH_COLUMN_ALPHA3, d.getCountryAlpha3());
-        values.put(dbHelper.DISH_COLUMN_NAME, d.getName());
-        values.put(dbHelper.DISH_COLUMN_DESCRIPTION, d.getDescription());
-        values.put(dbHelper.DISH_COLUMN_RATING, d.getRating());
-        values.put(dbHelper.DISH_COLUMN_DATE, d.getDate());
-        values.put(dbHelper.DISH_COLUMN_BITMAPLOCATION, "null");
+        values.put(DatabaseHelper.DISH_COLUMN_ALPHA3, d.getCountryAlpha3());
+        values.put(DatabaseHelper.DISH_COLUMN_NAME, d.getName());
+        values.put(DatabaseHelper.DISH_COLUMN_DESCRIPTION, d.getDescription());
+        values.put(DatabaseHelper.DISH_COLUMN_RATING, d.getRating());
+        values.put(DatabaseHelper.DISH_COLUMN_DATE, d.getDate());
+        values.put(DatabaseHelper.DISH_COLUMN_BITMAPLOCATION, "null");
 
-        long insertId = database.insert(dbHelper.TABLE_DISH,null,values);
+        long insertId = database.insert(DatabaseHelper.TABLE_DISH,null,values);
 
         if(!String.valueOf("-1").equals(String.valueOf(insertId)))
         {
@@ -92,17 +91,17 @@ public class CountriesDataSource {
     }
 
     public List<Country> getAllCountries() {
-        List<Country> countries = new ArrayList<Country>();
+        List<Country> countries = new ArrayList<>();
 
-        Cursor cursor = database.query(dbHelper.TABLE_COUNTRY,
+        Cursor cursor = database.query(DatabaseHelper.TABLE_COUNTRY,
                 allCountryColumns, null, null, null, null, null);
 
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             Country country = cursorToCountry(cursor);
 
-            Cursor dishescursor = database.query(dbHelper.TABLE_DISH,
-                    allDishColumns, dbHelper.DISH_COLUMN_ALPHA3 + " = '" + country.getAlpha3Code() + "'", null, null, null, null);
+            Cursor dishescursor = database.query(DatabaseHelper.TABLE_DISH,
+                    allDishColumns, DatabaseHelper.DISH_COLUMN_ALPHA3 + " = '" + country.getAlpha3Code() + "'", null, null, null, null);
 
             Log.i("Info", "Found " + dishescursor.getCount() + " dishes for " + country.getName());
 

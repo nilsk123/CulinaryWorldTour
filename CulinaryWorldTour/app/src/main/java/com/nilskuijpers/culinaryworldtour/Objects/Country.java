@@ -1,4 +1,4 @@
-package com.nilskuijpers.culinaryworldtour;
+package com.nilskuijpers.culinaryworldtour.Objects;
 
 import android.graphics.Bitmap;
 import android.util.Log;
@@ -8,9 +8,6 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by surfa on 29-3-2016.
- */
 public class Country {
 
     private String Alpha2Code;
@@ -22,7 +19,7 @@ public class Country {
     private Bitmap FlagBitmap;
     private List<Dish> SubmittedDishes;
 
-    public Country(){this.SubmittedDishes = new ArrayList<>();};
+    public Country(){this.SubmittedDishes = new ArrayList<>();}
 
     public Country(String alpha2code, String alpha3code, String name, String capital, int population, LatLng latlong)
         {
@@ -34,7 +31,7 @@ public class Country {
             this.LatitudeLongitude = latlong;
             this.SubmittedDishes = new ArrayList<>();
 
-        };
+        }
 
     public void addDish(Dish d)
     {

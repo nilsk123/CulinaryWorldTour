@@ -1,19 +1,13 @@
 package com.nilskuijpers.culinaryworldtour.Views;
 
 import android.content.Context;
-import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.nilskuijpers.culinaryworldtour.Country;
+import com.nilskuijpers.culinaryworldtour.Objects.Country;
 import com.nilskuijpers.culinaryworldtour.R;
 
-/**
- * Created by surfa on 7-4-2016.
- */
 public class CountryHeaderView extends LinearLayout {
 
 

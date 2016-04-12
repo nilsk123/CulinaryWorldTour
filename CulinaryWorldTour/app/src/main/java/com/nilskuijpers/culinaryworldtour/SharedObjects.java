@@ -1,21 +1,20 @@
 package com.nilskuijpers.culinaryworldtour;
 
 import android.content.Context;
-import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
 
 import com.nilskuijpers.culinaryworldtour.DatabaseLogic.CountriesDataSource;
+import com.nilskuijpers.culinaryworldtour.Fragments.CountrySelectorFragment;
 import com.nilskuijpers.culinaryworldtour.Interfaces.TaskDelegate;
 import com.nilskuijpers.culinaryworldtour.NetworkLogic.CountryParser;
+import com.nilskuijpers.culinaryworldtour.Objects.Country;
+import com.nilskuijpers.culinaryworldtour.Objects.Dish;
 
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
 
-/**
- * Created by surfa on 30-3-2016.
- */
 public class SharedObjects {
     private static SharedObjects ourInstance = new SharedObjects();
 
@@ -70,10 +69,9 @@ public class SharedObjects {
         {
             if(c.getAlpha3Code().toLowerCase().equals(alpha3code.toLowerCase()))
             {
-                TaskDelegate td = activityContext;
                 this.previousCountry = this.chosenCountry;
                 this.chosenCountry = c;
-                td.TaskCompletionResult(c);
+                activityContext.TaskCompletionResult(c);
                 Log.d("Debug",this.chosenCountry.getName() + " found in local database");
                 break;
             }
@@ -81,7 +79,7 @@ public class SharedObjects {
 
         if(this.chosenCountry == null || !this.chosenCountry.getAlpha3Code().toLowerCase().equals(alpha3code.toLowerCase()))
         {
-            countryParser = new CountryParser((MainActivity) activityContext);
+            countryParser = new CountryParser(this.context, activityContext);
             this.previousCountry = this.chosenCountry;
             this.countryParser.execute(alpha3code);
         }
