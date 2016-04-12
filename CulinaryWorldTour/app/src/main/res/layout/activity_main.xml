@@ -15,6 +15,13 @@
   ~ limitations under the License.
 -->
 
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/root_layout"
@@ -110,7 +117,7 @@
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:src="@drawable/dish_icon"
-            android:layout_marginRight="@dimen/fab_dish_margin"
+            android:layout_marginEnd="@dimen/fab_dish_margin"
             android:clickable="true"/>
 
         <android.support.design.widget.FloatingActionButton
@@ -121,7 +128,7 @@
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:src="@drawable/refresh_icon"
-            android:layout_marginRight="@dimen/fab_refresh_margin"
+            android:layout_marginEnd="@dimen/fab_refresh_margin"
             android:clickable="true"/>
 
     <android.support.design.widget.FloatingActionButton
@@ -136,3 +143,14 @@
         app:layout_anchorGravity="bottom|right|end"/>
 
 </android.support.design.widget.CoordinatorLayout>
+
+    <android.support.design.widget.NavigationView
+        android:id="@+id/nvView"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@android:color/white"
+        app:menu="@menu/drawer_view" />
+
+
+</android.support.v4.widget.DrawerLayout>

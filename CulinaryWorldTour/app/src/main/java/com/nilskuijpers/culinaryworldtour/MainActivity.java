@@ -1,5 +1,6 @@
 package com.nilskuijpers.culinaryworldtour;
 
+import android.content.res.Configuration;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
@@ -7,9 +8,10 @@ import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,35 +25,60 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.nilskuijpers.culinaryworldtour.Interfaces.TaskDelegate;
 import com.nilskuijpers.culinaryworldtour.Misc.AppBarStateChangeListener;
-import com.nilskuijpers.culinaryworldtour.Misc.RVAdapter;
-import com.nilskuijpers.culinaryworldtour.Views.CountryHeaderView;
 
-public class MainActivity extends AppCompatActivity implements TaskDelegate {
+public class MainActivity extends AppCompatActivity implements TaskDelegate, OnMapReadyCallback {
 
     private SharedObjects data;
     private FloatingActionButton fab;
     private FloatingActionButton collapsedFab;
+    private MapFragment gMapFragment;
     private GoogleMap gMap;
     private ImageView countryFlagImageView;
     private AppBarLayout appBarLayout;
     private Animation fabRotate;
     private LinearLayout rv;
+    private DrawerLayout mDrawer;
+    private ActionBarDrawerToggle mDrawerToggle;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        mDrawerToggle = new ActionBarDrawerToggle(MainActivity.this, mDrawer, R.string.drawer_open, R.string.drawer_close){
+
+            /** Called when a drawer has settled in a completely closed state. */
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+                //getActionBar().setTitle(mTitle);
+                //invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+
+            /** Called when a drawer has settled in a completely open state. */
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                //getActionBar().setTitle(mDrawerTitle);
+                //invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+        };
+
+
+        mDrawer.addDrawerListener(mDrawerToggle);
+
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         fabRotate = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate);
 
@@ -82,7 +109,10 @@ public class MainActivity extends AppCompatActivity implements TaskDelegate {
         data = SharedObjects.getInstance();
         data.initWithContext(getApplicationContext());
 
-        gMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
+        //gMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
+        gMapFragment = (MapFragment) getFragmentManager()
+                .findFragmentById(R.id.map);
+        gMapFragment.getMapAsync(this);
 
         countryFlagImageView = (ImageView) findViewById(R.id.countryFlagImageView);
 
@@ -111,9 +141,24 @@ public class MainActivity extends AppCompatActivity implements TaskDelegate {
     }
 
     @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        mDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        // Pass any configuration change to the drawer toggls
+        mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        //getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
@@ -122,14 +167,14 @@ public class MainActivity extends AppCompatActivity implements TaskDelegate {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                mDrawer.openDrawer(GravityCompat.START);
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
+
     }
 
     @Override
@@ -168,17 +213,15 @@ public class MainActivity extends AppCompatActivity implements TaskDelegate {
                 fadeIn.start();
             }
 
-            gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(c.getLocation(), 5));
-            fabRotate.setRepeatMode(Animation.ABSOLUTE);
-            fabRotate.setRepeatCount(0);
-            fabRotate.cancel();
+            this.gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(c.getLocation(), 5));
             fab.clearAnimation();
 
-
-
-            CountryHeaderView chv = new CountryHeaderView(getApplicationContext(),c);
-
             LayoutInflater.from(this).inflate(R.layout.countryheaderview,(ViewGroup)findViewById(R.id.container),true);
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        this.gMap = googleMap;
     }
 }
 
