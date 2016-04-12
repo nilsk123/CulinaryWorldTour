@@ -36,6 +36,11 @@ public class SharedObjects {
     private SharedObjects() {
     }
 
+    public Country getChosenCountry()
+    {
+        return this.chosenCountry;
+    }
+
     public void initWithContext(Context cntxt)
     {
         this.context = cntxt;

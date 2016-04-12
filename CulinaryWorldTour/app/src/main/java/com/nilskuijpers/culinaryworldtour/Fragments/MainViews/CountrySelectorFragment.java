@@ -75,6 +75,11 @@ public class CountrySelectorFragment extends Fragment implements OnMapReadyCallb
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            //probably orientation change
+            //myData = (List<String>) savedInstanceState.getSerializable("list");
+        }
         data = SharedObjects.getInstance();
         data.initWithContext(getContext());
     }

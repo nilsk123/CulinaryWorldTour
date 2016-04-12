@@ -7,8 +7,13 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.nilskuijpers.culinaryworldtour.Objects.Country;
 import com.nilskuijpers.culinaryworldtour.R;
+import com.nilskuijpers.culinaryworldtour.SharedObjects;
+
+import org.w3c.dom.Text;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -19,14 +24,12 @@ import com.nilskuijpers.culinaryworldtour.R;
  * create an instance of this fragment.
  */
 public class CountryDetailFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private SharedObjects data;
+    private Country country;
+    private TextView countryName;
+    private TextView countryCapital;
+    private TextView countryPopulation;
 
     private OnFragmentInteractionListener mListener;
 
@@ -45,15 +48,26 @@ public class CountryDetailFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-        }
+
+        data = SharedObjects.getInstance();
+
+        country = data.getChosenCountry();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_country_detail, container, false);
+        View view = inflater.inflate(R.layout.fragment_country_detail, container, false);
+
+        countryName = (TextView) view.findViewById(R.id.countryNamePlaceholder);
+        countryCapital = (TextView) view.findViewById(R.id.countryCapitalPlaceholder);
+        countryPopulation = (TextView) view.findViewById(R.id.countryPopPlaceholder);
+
+        countryName.setText(country.getName());
+        countryCapital.setText(country.getCapital());
+        countryPopulation.setText(String.valueOf(country.getPopulation()));
+
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
