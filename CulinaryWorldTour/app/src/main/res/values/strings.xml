@@ -3,8 +3,6 @@
     <string name="action_settings">Settings</string>
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
-
-
     <string-array name="iso3166">
         <item>AFG</item>
         <item>ALA</item>

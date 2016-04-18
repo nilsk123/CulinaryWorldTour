@@ -203,6 +203,8 @@ public class CountrySelectorFragment extends Fragment implements OnMapReadyCallb
                 TransitionDrawable transitionDrawable = new TransitionDrawable(layers);
                 countryFlagImageView.setImageDrawable(transitionDrawable);
                 transitionDrawable.startTransition(1500);
+
+
             }
 
             else {
